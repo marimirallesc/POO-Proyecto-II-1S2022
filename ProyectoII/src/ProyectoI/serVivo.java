@@ -9,18 +9,13 @@ public class serVivo {
     private int vida = 0;
     private int x = 0;
     private int y = 0;
-    private boolean movimiento = false;
     private String posicion = "";
-    ProcesosTablero tablero;
 
-    public serVivo(int vida, int x, int y, boolean movimiento, String posicion, 
-            ProcesosTablero tablero) {
+    public serVivo(int vida, int x, int y, String posicion) {
         this.vida = vida;
         this.x = x;
         this.y = y;
-        this.movimiento = movimiento;
         this.posicion = posicion;
-        this.tablero = tablero;
     }
 
     public int getY() {
@@ -47,14 +42,6 @@ public class serVivo {
     public void setX(int x) {
         this.x = x;
         this.posicion = (this.x) + "," + (this.y);
-    }
-
-    public boolean isMovimiento() {
-        return movimiento;
-    }
-
-    public void setMovimiento(boolean movimiento) {
-        this.movimiento = movimiento;
     }
 
     public String getPosicion() {
