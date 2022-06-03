@@ -114,21 +114,44 @@ public class View extends javax.swing.JFrame {
                 corazones[4].setIcon(cRojo);
                 break;
             default:
+                corazones[0].setIcon(cRojo);
+                corazones[1].setIcon(cRojo);
+                corazones[2].setIcon(cRojo);
+                corazones[3].setIcon(cRojo);
+                corazones[4].setIcon(cRojo);
                 break;
         }
     }
 
-    public void setIconNull(int x, int y){
+    public void setIconNull(int x, int y) {
         MatrizLabels[x][y].setIcon(null);
     }
-    
+
     public void setPersonajePrinicpal(personajePrincipal personaje) {
         int ejeX = personaje.getX();
         int ejeY = personaje.getY();
         int vida = personaje.getVida();
         ImageIcon icon = personaje.getIcon();
-        MatrizLabels[ejeX][ejeY].setIcon(icon);
         vidaCorazones(vida);
+        if (vida > 0) {
+            MatrizLabels[ejeX][ejeY].setIcon(icon);
+        }
+    }
+
+    public void setEnemigo(enemigos goomba) {
+        int ejeX = goomba.getX();
+        int ejeY = goomba.getY();
+        int vida = goomba.getVida();
+        ImageIcon icon = goomba.getIcon();
+        MatrizLabels[ejeX][ejeY].setIcon(icon);
+    }
+
+    public void setAliado(aliados hongo) {
+        int ejeX = hongo.getX();
+        int ejeY = hongo.getY();
+        int vida = hongo.getVida();
+        ImageIcon icon = hongo.getIcon();
+        MatrizLabels[ejeX][ejeY].setIcon(icon);
     }
 
     public JLabel[][] getMatrizLabels() {
@@ -146,7 +169,17 @@ public class View extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
+    public boolean isAliado(int xP, int yP) {
+        ImageIcon icon = new javax.swing.ImageIcon(getClass()
+                .getResource("/Imagenes/hongo.png"));
+        //Pregunta si un label tiene un aliado
+        if (MatrizLabels[xP][yP].getIcon() == icon) {
+            return true;
+        }
+        return false;
+    }
+
 //Variables globales
     //Interfaz
     JLabel[][] MatrizLabels; //Contiene todos los labels
