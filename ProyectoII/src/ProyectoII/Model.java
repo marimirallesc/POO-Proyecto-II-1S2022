@@ -33,7 +33,8 @@ public class Model {
             int ejeX = goombas.get(i).getX();
             int ejeY = goombas.get(i).getY();
             if (x == ejeX && y == ejeY) {
-                goombas.remove(i);
+                //System.out.println("getEnemigo: " + goombas.size());
+                goombas.remove(goombas.get(i));
                 break;
             }
         }
@@ -45,8 +46,9 @@ public class Model {
             int ejeX = hongos.get(i).getX();
             int ejeY = hongos.get(i).getY();
             if (x == ejeX && y == ejeY) {
-                hongos.remove(i);
+                //System.out.println("getAliado: " + hongos.size());
                 personaje.recibirVida();
+                hongos.remove(hongos.get(i));
                 break;
             }
         }

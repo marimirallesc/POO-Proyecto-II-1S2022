@@ -105,79 +105,90 @@ public class Controller {
                 ejeY2++;
 
             }
-            if (!vista.isEmpty((ejeX), (ejeY2)) && vista.isAliado((ejeX), (ejeY2))) {
-                procedimientos.getAliado(ejeX, ejeY2);
-            } else if (!vista.isEmpty((ejeX), (ejeY2)) && !vista.isAliado((ejeX), (ejeY2))) {
-                procedimientos.getEnemigo(ejeX, ejeY2);
+            if (!vista.isEmpty((ejeX), (ejeY2))) {
+                if (vista.isAliado((ejeX), (ejeY2))) {
+                    System.out.println("Rescate Aliado");
+                    vista.setIconNull(ejeX, ejeY2);
+                    procedimientos.getAliado(ejeX, ejeY2);
+                } else if (!vista.isAliado((ejeX), (ejeY2))) {
+                    System.out.println("Ataque Enemigo");
+                    vista.setIconNull(ejeX, ejeY2);
+                    procedimientos.getEnemigo(ejeX, ejeY2);
+                }  
             }
-            vista.setIconNull(ejeX, ejeY2);
         }
         procedimientos.actualizarMovimientos(ejeX, ejeY);
         vista.setPersonajePrinicpal(procedimientos.getPersonaje());
-        moverEnemigos();
+        //moverEnemigos();
         imprimirAliados();
+        vista.setPersonajePrinicpal(procedimientos.getPersonaje());
         gameOver();
     }
-    
-    public void gameOver(){
-        if (vida == 0) {
-            JOptionPane.showMessageDialog(null, "Perdiste");
-        } else if(enemigosCantidad == 0 && aliadosCantidad == 0){
-            JOptionPane.showMessageDialog(null, "Ganaste");
+
+    public void gameOver() {
+        //System.out.println(procedimientos.goombas.size());
+        vista.actualizarEnemigos(String.valueOf(procedimientos.goombas.size()));
+        vista.actualizarAliados(String.valueOf(procedimientos.hongos.size()));
+        if (procedimientos.getPersonaje().getVida() == 0) {
+            vista.anuncios(false);
+        } else if (procedimientos.goombas.size() == 0
+                && procedimientos.hongos.size() == 0) {
+            vista.anuncios(true);
         }
     }
-    
-//    public void anuncios(int num) {
-//        this.setEnabled(false);
-//        if (num == 2) {
-//            if (gano) {
-//                JOptionPane.showMessageDialog(this, "Ganaste");
-//            } else {
-//                JOptionPane.showMessageDialog(this, "Perdiste");
-//            }
-//            this.dispose();
-//        }
-//    }
 
     public void moverEnemigos() {
         int cantidad = procedimientos.goombas.size();
         int ejeXP = procedimientos.getPersonaje().getX();
         int ejeYP = procedimientos.getPersonaje().getY();
+        int ejeX = 0;
+        int ejeY = 0;
+        String posicion = "";
+        System.out.println("****** " + cantidad + " ******");
         for (int i = 0; i < cantidad; i++) {
-            int ejeX = procedimientos.goombas.get(i).getX();
-            int ejeY = procedimientos.goombas.get(i).getY();
-            String posicion = "";
-            vista.setIconNull(ejeX, ejeY);
-            //do {
-            if (ejeX != ejeXP) {
-                if (ejeX > ejeXP) {
-                    ejeX--;
-                } else if (ejeX < ejeXP) {
-                    ejeX++;
+            try {
+                ejeX = procedimientos.goombas.get(i).getX();
+                ejeY = procedimientos.goombas.get(i).getY();
+                vista.setIconNull(ejeX, ejeY);
+                if (ejeX != ejeXP) {
+                    if (ejeX > ejeXP) {
+                        if (vista.isEmpty((ejeX - 1), (ejeY)) || vista.isPersonaje((ejeX - 1), (ejeY), procedimientos.getPersonaje().getIcon())) {
+                            ejeX--;
+                        }
+                    } else if (ejeX < ejeXP) {
+                        if (vista.isEmpty((ejeX + 1), (ejeY)) || vista.isPersonaje((ejeX + 1), (ejeY), procedimientos.getPersonaje().getIcon())) {
+                            ejeX++;
+                        }
+                    }
+                } else if (ejeY != ejeYP) {
+                    if (ejeY > ejeYP) {
+                        if (vista.isEmpty((ejeX), (ejeY - 1)) || vista.isPersonaje((ejeX), (ejeY - 1), procedimientos.getPersonaje().getIcon())) {
+                            ejeY--;
+                        }
+                    } else if (ejeY < ejeYP) {
+                        if (vista.isEmpty((ejeX), (ejeY + 1)) || vista.isPersonaje((ejeX), (ejeY + 1), procedimientos.getPersonaje().getIcon())) {
+                            ejeY++;
+                        }
+                    }
                 }
-            } else if (ejeY != ejeYP) {
-                if (ejeY > ejeYP) {
-                    ejeY--;
-                } else if (ejeY < ejeYP) {
-                    ejeY++;
+                posicion = ejeX + "," + ejeY;
+                System.out.println(i + ": " + posicion);
+                if (ejeX == ejeXP && ejeY == ejeYP) {
+                    procedimientos.getEnemigo(ejeX, ejeY);
+                    procedimientos.getPersonaje().recibirAtaque();
+                    System.out.println("Ataque: " + procedimientos.goombas.size());
                 }
+                procedimientos.goombas.get(i).setX(ejeX);
+                procedimientos.goombas.get(i).setY(ejeY);
+                imprimirEnemigos();
+            } catch (Exception e) {
+                //break;
             }
-            //posicion = ejeX + "," + ejeY;
-            //System.out.println(i + ": " + posicion);
-            //} while (procedimientos.posGoombas.contains(posicion));
-            procedimientos.goombas.get(i).setX(ejeX);
-            procedimientos.goombas.get(i).setY(ejeY);
-            if (ejeX == ejeXP && ejeY == ejeYP) {
-                procedimientos.getPersonaje().recibirAtaque();
-                procedimientos.getEnemigo(ejeX, ejeY);
-            }
-            imprimirEnemigos();
         }
     }
 
     public void imprimirEnemigos() {
         int cantidad = procedimientos.goombas.size();
-        vista.actualizarEnemigos(String.valueOf(cantidad));
         for (int i = 0; i < cantidad; i++) {
             vista.setEnemigo(procedimientos.goombas.get(i));
         }
@@ -185,7 +196,6 @@ public class Controller {
 
     public void imprimirAliados() {
         int cantidad = procedimientos.hongos.size();
-        vista.actualizarAliados(String.valueOf(cantidad));
         int ejeXP = procedimientos.getPersonaje().getX();
         int ejeYP = procedimientos.getPersonaje().getY();
         for (int i = 0; i < cantidad; i++) {

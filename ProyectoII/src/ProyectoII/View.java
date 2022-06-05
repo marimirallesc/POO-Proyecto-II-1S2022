@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class View extends javax.swing.JFrame {
@@ -16,6 +17,16 @@ public class View extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         tablero = pnlTablero();
         jLCorazones();
+    }
+
+    public void anuncios(boolean gano) {
+        this.setEnabled(false);
+        if (gano) {
+            JOptionPane.showMessageDialog(this, "Ganaste");
+        } else {
+            JOptionPane.showMessageDialog(this, "Perdiste");
+        }
+        this.dispose();
     }
 
     public JPanel pnlTablero() {
@@ -123,18 +134,18 @@ public class View extends javax.swing.JFrame {
         }
     }
 
-    public void actualizarEnemigos(String texto){
+    public void actualizarEnemigos(String texto) {
         jTFEnemigos.setEditable(false);
         jTFEnemigos.setEnabled(false);
         jTFEnemigos.setText(texto);
     }
 
-    public void actualizarAliados(String texto){
+    public void actualizarAliados(String texto) {
         jTFAliados.setEditable(false);
         jTFAliados.setEnabled(false);
         jTFAliados.setText(texto);
     }
-    
+
     public void setIconNull(int x, int y) {
         MatrizLabels[x][y].setIcon(null);
     }
@@ -153,7 +164,6 @@ public class View extends javax.swing.JFrame {
     public void setEnemigo(enemigos goomba) {
         int ejeX = goomba.getX();
         int ejeY = goomba.getY();
-        int vida = goomba.getVida();
         ImageIcon icon = goomba.getIcon();
         MatrizLabels[ejeX][ejeY].setIcon(icon);
     }
@@ -161,7 +171,6 @@ public class View extends javax.swing.JFrame {
     public void setAliado(aliados hongo) {
         int ejeX = hongo.getX();
         int ejeY = hongo.getY();
-        int vida = hongo.getVida();
         ImageIcon icon = hongo.getIcon();
         MatrizLabels[ejeX][ejeY].setIcon(icon);
     }
@@ -186,7 +195,20 @@ public class View extends javax.swing.JFrame {
         ImageIcon hongo = new javax.swing.ImageIcon(getClass()
                 .getResource("/Imagenes/hongo.png"));
         //Pregunta si un label tiene un aliado
+        //System.out.println(MatrizLabels[xP][yP].getIcon());
+        //if (!isEmpty((xP), (yP))) {
         if (MatrizLabels[xP][yP].getIcon().toString().equals(hongo.toString())) {
+            //System.out.println("isAliado: true");
+            return true;
+        }
+        //System.out.println("isAliado: false");
+        //}
+        return false;
+    }
+
+    public boolean isPersonaje(int xP, int yP, ImageIcon icono) {
+        //Pregunta si un label tiene un aliado
+        if (MatrizLabels[xP][yP].getIcon().toString().equals(icono.toString())) {
             return true;
         }
         return false;
