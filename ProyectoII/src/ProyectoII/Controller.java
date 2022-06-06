@@ -119,7 +119,7 @@ public class Controller {
         }
         procedimientos.actualizarMovimientos(ejeX, ejeY);
         vista.setPersonajePrinicpal(procedimientos.getPersonaje());
-        //moverEnemigos();
+        moverEnemigos();
         imprimirAliados();
         vista.setPersonajePrinicpal(procedimientos.getPersonaje());
         gameOver();
@@ -144,8 +144,9 @@ public class Controller {
         int ejeX = 0;
         int ejeY = 0;
         String posicion = "";
-        System.out.println("****** " + cantidad + " ******");
+        //System.out.println("****** " + cantidad + " ******");
         for (int i = 0; i < cantidad; i++) {
+        System.out.println("PP: " + procedimientos.getPersonaje().getPosicion() + "--------------- ");
             try {
                 ejeX = procedimientos.goombas.get(i).getX();
                 ejeY = procedimientos.goombas.get(i).getY();
@@ -173,13 +174,13 @@ public class Controller {
                 }
                 posicion = ejeX + "," + ejeY;
                 System.out.println(i + ": " + posicion);
+                procedimientos.goombas.get(i).setX(ejeX);
+                procedimientos.goombas.get(i).setY(ejeY);
                 if (ejeX == ejeXP && ejeY == ejeYP) {
                     procedimientos.getEnemigo(ejeX, ejeY);
                     procedimientos.getPersonaje().recibirAtaque();
-                    System.out.println("Ataque: " + procedimientos.goombas.size());
+                    //System.out.println("Ataque: " + procedimientos.goombas.size());
                 }
-                procedimientos.goombas.get(i).setX(ejeX);
-                procedimientos.goombas.get(i).setY(ejeY);
                 imprimirEnemigos();
             } catch (Exception e) {
                 //break;
