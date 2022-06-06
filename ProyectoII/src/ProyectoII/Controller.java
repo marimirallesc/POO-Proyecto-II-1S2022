@@ -69,42 +69,6 @@ public class Controller {
         procedimientos.imprimirEnemigos();
     }
 
-    public void actualizarEnemigos(String texto) {
-        vista.actualizarEnemigos(texto);
-    }
-
-    public void actualizarAliados(String texto) {
-        vista.actualizarAliados(texto);
-    }
-
-    public void setIconNull(int x, int y) {
-        vista.setIconNull(x, y);
-    }
-
-    public void setPersonajePrinicpal(personajePrincipal personaje) {
-        vista.setPersonajePrinicpal(personaje);
-    }
-
-    public void setEnemigo(enemigos goomba) {
-        vista.setEnemigo(goomba);
-    }
-
-    public void setAliado(aliados hongo) {
-        vista.setAliado(hongo);
-    }
-
-    public boolean isEmpty(int xP, int yP) {
-        return vista.isEmpty(xP, yP);
-    }
-
-    public boolean isAliado(int xP, int yP) {
-        return vista.isAliado(xP, yP);
-    }
-
-    public boolean isPersonaje(int xP, int yP, ImageIcon icono) {
-        return vista.isPersonaje(xP, yP, icono);
-    }
-
     //Variables globales
     //MVC
     View vista;
