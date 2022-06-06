@@ -25,6 +25,7 @@ public class Model {
     public void actualizarMovimientos(int x, int y) {
         personaje.setX(x);
         personaje.setY(y);
+        personaje.observable.setState(personaje.getPosicion());
     }
 
     public void getEnemigo(int x, int y) {
@@ -33,7 +34,7 @@ public class Model {
             int ejeX = goombas.get(i).getX();
             int ejeY = goombas.get(i).getY();
             if (x == ejeX && y == ejeY) {
-                System.out.println("getEnemigo: " + goombas.size());
+                //System.out.println("getEnemigo: " + goombas.size());
                 goombas.remove(goombas.get(i));
                 break;
             }
@@ -46,7 +47,7 @@ public class Model {
             int ejeX = hongos.get(i).getX();
             int ejeY = hongos.get(i).getY();
             if (x == ejeX && y == ejeY) {
-                System.out.println("getAliado: " + hongos.size());
+                //System.out.println("getAliado: " + hongos.size());
                 personaje.recibirVida();
                 hongos.remove(hongos.get(i));
                 break;
@@ -61,7 +62,7 @@ public class Model {
                 ejeY = random(0, 15);
                 posicion = ejeX + "," + ejeY;
             } while (todo.contains(posicion));
-            enemigos goomba = factory.crearEnemigo(1, ejeX, ejeY);
+            enemigos goomba = factory.crearEnemigo(1, ejeX, ejeY, personaje.getPosicion(), personaje.observable);
             goombas.add(goomba);
             todo.add(goomba.getPosicion());
         }
@@ -74,7 +75,7 @@ public class Model {
                 ejeY = random(0, 15);
                 posicion = ejeX + "," + ejeY;
             } while (todo.contains(posicion));
-            aliados hongo = factory.crearAliado(1, ejeX, ejeY);
+            aliados hongo = factory.crearAliado(1, ejeX, ejeY, personaje.getPosicion(), personaje.observable);
             hongos.add(hongo);
             posGoombas.add(hongo.getPosicion());
             todo.add(hongo.getPosicion());
@@ -94,7 +95,7 @@ public class Model {
     ArrayList<String> posGoombas = new ArrayList<String>();
     ArrayList<String> todo = new ArrayList<String>();
     //Contiene todas las coordenadas que no son vacías (contiene un icono)
-
+    
     private personajePrincipal personaje;
 
     public personajePrincipal getPersonaje() {

@@ -4,6 +4,12 @@ package ProyectoII;
  *
  * @author Mari
  */
-public class Observer {
+public abstract class Observer {
+
+    protected Observable subject;
     
+    public String update() {
+        return subject.getState();
+    }
+
 }
