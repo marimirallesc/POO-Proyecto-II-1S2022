@@ -14,13 +14,17 @@ public class enemigos extends serVivo{
             .getResource("/Imagenes/goombaRL.png"));
     private ImageIcon icon;
     private boolean direccion;
+    private String posicionPP;
     //true = hacia la derecha
     //false = hacia la izquierda
+    ObserverEnemigos observer;
     
     public enemigos(int vida, int x, int y, boolean direccionP, 
-            String posicion) {
+            String posicion, String posicionP, Observable observable) {
         super(vida, x, y, posicion);
         setDireccion(direccionP);
+        this.posicionPP = posicionP;
+        observer = new ObserverEnemigos(observable) {};
     }
 
     public ImageIcon getGoombaLR() {
@@ -50,6 +54,14 @@ public class enemigos extends serVivo{
 
     public void setIcon(ImageIcon icon) {
         this.icon = icon;
+    }
+
+    public String getPosicionPP() {
+        return posicionPP;
+    }
+
+    public void setPosicionPP(String posicionPP) {
+        this.posicionPP = observer.update();
     }
 
 }
