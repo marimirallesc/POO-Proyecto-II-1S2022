@@ -22,7 +22,6 @@ public class Observable{
     
     public void setState(String state) {
         this.state = state;
-        System.out.println("\nCurrent State: " + state + "\n");
         notifyObservers();
     }
     

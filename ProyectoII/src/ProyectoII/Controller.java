@@ -2,6 +2,8 @@ package ProyectoII;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class Controller {
@@ -9,10 +11,13 @@ public class Controller {
     public Controller(View vistaP, Model procedimientosP) throws Exception {
         vista = vistaP;
         procedimientos = procedimientosP;
+        procedimientos.recibirController(this);
         vista.addViewKeyListener(new listener());
         inicio();
     }
 
+    
+    
     class listener implements KeyListener {
 
         @Override
@@ -39,7 +44,7 @@ public class Controller {
                         c = Character.toUpperCase(c);
                         break;
                 }
-                movimientos(c);
+                procedimientos.movimientos(c);
             }
         }
 
@@ -55,189 +60,52 @@ public class Controller {
     public void inicio() {
         vista.sizeJLabel();
         vista.crearTablero();
-        vista.actualizarEnemigos(String.valueOf(enemigosCantidadInicial));
-        vista.actualizarAliados(String.valueOf(aliadosCantidadInicial));
-        procedimientos.crearPersonaje(vida, posInicialX, posInicialY);
+        vista.actualizarEnemigos(String.valueOf(procedimientos.enemigosCantidadInicial));
+        vista.actualizarAliados(String.valueOf(procedimientos.aliadosCantidadInicial));
+        procedimientos.crearPersonaje(procedimientos.vida, procedimientos.posInicialX, procedimientos.posInicialY);
         vista.setPersonajePrinicpal(procedimientos.getPersonaje());
-        procedimientos.factoryEnemigo(enemigosCantidadInicial);
-        procedimientos.factoryAliado(aliadosCantidadInicial);
-        imprimirEnemigos();
-        System.out.println(procedimientos.posGoombas);
-        
+        procedimientos.factoryEnemigo(procedimientos.enemigosCantidadInicial);
+        procedimientos.factoryAliado(procedimientos.aliadosCantidadInicial);
+        procedimientos.imprimirEnemigos();
     }
 
-    public void movimientos(char c) {
-        personajePrincipal personaje = procedimientos.getPersonaje();
-        int ejeX = personaje.getX();
-        int ejeY = personaje.getY();
-        String posicion = (ejeX) + "," + (ejeY);
-        vista.setIconNull(ejeX, ejeY);
-        if (c == 'A' || c == 37) {
-            if (ejeY > 0) {
-                personaje.setDireccion(false);
-                if (vista.isEmpty((ejeX), (ejeY - 1))) {
-                    ejeY--;
-                }
-            }
-        } else if (c == 'W' || c == 38) {
-            if (ejeX > 0) {
-                if (vista.isEmpty((ejeX - 1), (ejeY))) {
-                    ejeX--;
-                }
-            }
-        } else if (c == 'D' || c == 39) {
-            if (ejeY < (vista.DimensionY - 1)) {
-                personaje.setDireccion(true);
-                if (vista.isEmpty((ejeX), (ejeY + 1))) {
-                    ejeY++;
-                }
-            }
-        } else if (c == 'S' || c == 40) {
-            if (ejeX < (vista.DimensionX - 1)) {
-                if (vista.isEmpty((ejeX + 1), (ejeY))) {
-                    ejeX++;
-                }
-            }
-        } else if (c == 10 || c == 32) {
-            int ejeY2 = ejeY;
-            if (!personaje.isDireccion()) {
-                ejeY2--;
-            } else {
-                ejeY2++;
-
-            }
-            if (!vista.isEmpty((ejeX), (ejeY2))) {
-                if (vista.isAliado((ejeX), (ejeY2))) {
-                    //System.out.println("Rescate Aliado");
-                    vista.setIconNull(ejeX, ejeY2);
-                    procedimientos.getAliado(ejeX, ejeY2);
-                } else if (!vista.isAliado((ejeX), (ejeY2))) {
-                    //System.out.println("Ataque Enemigo");
-                    vista.setIconNull(ejeX, ejeY2);
-                    procedimientos.getEnemigo(ejeX, ejeY2);
-                }
-            }
-        }
-        procedimientos.actualizarMovimientos(ejeX, ejeY);
-        vista.setPersonajePrinicpal(procedimientos.getPersonaje());
-        //moverEnemigos();
-        imprimirAliados();
-        vista.setPersonajePrinicpal(procedimientos.getPersonaje());
-        turno++;
-        agregarEA();
-        gameOver();
+    public void actualizarEnemigos(String texto) {
+        vista.actualizarEnemigos(texto);
     }
 
-    public void agregarEA() {
-        if (turno % 4 == 0) {
-            if (enemigosCantidad > enemigosCantidadInicial) {
-                procedimientos.factoryEnemigo(1);
-                enemigosCantidad--;
-                imprimirEnemigos();
-            }
-            if (aliadosCantidad > aliadosCantidadInicial) {
-                procedimientos.factoryAliado(1);
-                aliadosCantidad--;
-                imprimirAliados();
-            }
-        }
+    public void actualizarAliados(String texto) {
+        vista.actualizarAliados(texto);
     }
 
-    public void gameOver() {
-        //System.out.println(procedimientos.goombas.size());
-        vista.actualizarEnemigos(String.valueOf(procedimientos.goombas.size()));
-        vista.actualizarAliados(String.valueOf(procedimientos.hongos.size()));
-        if (procedimientos.getPersonaje().getVida() == 0) {
-            vista.anuncios(false);
-        } else if (procedimientos.goombas.size() == 0
-                && procedimientos.hongos.size() == 0) {
-            vista.anuncios(true);
-        }
+    public void setIconNull(int x, int y) {
+        vista.setIconNull(x, y);
     }
 
-    public void moverEnemigos() {
-        int cantidad = procedimientos.goombas.size();
-        int ejeXP = procedimientos.getPersonaje().getX();
-        int ejeYP = procedimientos.getPersonaje().getY();
-        int ejeX = 0;
-        int ejeY = 0;
-        String posicion = "";
-        //System.out.println("****** " + cantidad + " ******");
-        for (int i = 0; i < cantidad; i++) {
-            //System.out.println("PP: " + procedimientos.getPersonaje().getPosicion() + "--------------- ");
-            try {
-                ejeX = procedimientos.goombas.get(i).getX();
-                ejeY = procedimientos.goombas.get(i).getY();
-                vista.setIconNull(ejeX, ejeY);
-                if (ejeX != ejeXP) {
-                    if (ejeX > ejeXP) {
-                        if (vista.isEmpty((ejeX - 1), (ejeY)) || vista.isPersonaje((ejeX - 1), (ejeY), procedimientos.getPersonaje().getIcon())) {
-                            ejeX--;
-                        }
-                    } else if (ejeX < ejeXP) {
-                        if (vista.isEmpty((ejeX + 1), (ejeY)) || vista.isPersonaje((ejeX + 1), (ejeY), procedimientos.getPersonaje().getIcon())) {
-                            ejeX++;
-                        }
-                    }
-                } else if (ejeY != ejeYP) {
-                    if (ejeY > ejeYP) {
-                        if (vista.isEmpty((ejeX), (ejeY - 1)) || vista.isPersonaje((ejeX), (ejeY - 1), procedimientos.getPersonaje().getIcon())) {
-                            ejeY--;
-                        }
-                    } else if (ejeY < ejeYP) {
-                        if (vista.isEmpty((ejeX), (ejeY + 1)) || vista.isPersonaje((ejeX), (ejeY + 1), procedimientos.getPersonaje().getIcon())) {
-                            ejeY++;
-                        }
-                    }
-                }
-                posicion = ejeX + "," + ejeY;
-                //System.out.println(i + ": " + posicion);
-                procedimientos.goombas.get(i).setX(ejeX);
-                procedimientos.goombas.get(i).setY(ejeY);
-                if (ejeX == ejeXP && ejeY == ejeYP) {
-                    procedimientos.getEnemigo(ejeX, ejeY);
-                    procedimientos.getPersonaje().recibirAtaque();
-                    //System.out.println("Ataque: " + procedimientos.goombas.size());
-                }
-                imprimirEnemigos();
-            } catch (Exception e) {
-                //break;
-            }
-        }
+    public void setPersonajePrinicpal(personajePrincipal personaje) {
+        vista.setPersonajePrinicpal(personaje);
     }
 
-    public void imprimirEnemigos() {
-        int cantidad = procedimientos.goombas.size();
-        for (int i = 0; i < cantidad; i++) {
-            vista.setEnemigo(procedimientos.goombas.get(i));
-        }
+    public void setEnemigo(enemigos goomba) {
+        vista.setEnemigo(goomba);
     }
 
-    public void imprimirAliados() {
-        int cantidad = procedimientos.hongos.size();
-        int ejeXP = procedimientos.getPersonaje().getX();
-        int ejeYP = procedimientos.getPersonaje().getY();
-        for (int i = 0; i < cantidad; i++) {
-            int ejeX = procedimientos.hongos.get(i).getX();
-            int ejeY = procedimientos.hongos.get(i).getY();
-            vista.setIconNull(ejeX, ejeY);
-            if (((ejeX - 1) == ejeXP) || (ejeX == ejeXP) || ((ejeX + 1) == ejeXP)) {
-                if (((ejeY - 1) == ejeYP) || (ejeY == ejeYP) || ((ejeY + 1) == ejeYP)) {
-                    vista.setAliado(procedimientos.hongos.get(i));
-                }
-            }
-        }
+    public void setAliado(aliados hongo) {
+        vista.setAliado(hongo);
+    }
+
+    public boolean isEmpty(int xP, int yP) {
+        return vista.isEmpty(xP, yP);
+    }
+
+    public boolean isAliado(int xP, int yP) {
+        return vista.isAliado(xP, yP);
+    }
+
+    public boolean isPersonaje(int xP, int yP, ImageIcon icono) {
+        return vista.isPersonaje(xP, yP, icono);
     }
 
     //Variables globales
-    int vida = 5;
-    int enemigosCantidad = 10;
-    int aliadosCantidad = 6;
-    int enemigosCantidadInicial = 5;
-    int aliadosCantidadInicial = 3;
-    int posInicialX = 5;
-    int posInicialY = 7;
-    int turno = 0;
     //MVC
     View vista;
     Model procedimientos;
