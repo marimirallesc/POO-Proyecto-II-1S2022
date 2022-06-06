@@ -14,15 +14,16 @@ public class personajePrincipal extends serVivo{
             .getResource("/Imagenes/daisyRL.png"));
     private ImageIcon icon;
     private boolean direccion; 
-    Observable observable;
     //true = hacia la derecha
     //false = hacia la izquierda
+    Observable observable;
     
     public personajePrincipal(int vida, int x, int y, boolean direccionP, 
             String posicion) {
         super(vida, x, y, posicion);
         setDireccion(direccionP);
         observable = new Observable(getPosicion());
+        observable.notifyObservers();
     }
 
     public ImageIcon getDaisyLR() {

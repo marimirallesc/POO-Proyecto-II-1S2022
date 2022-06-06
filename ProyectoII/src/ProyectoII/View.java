@@ -21,11 +21,7 @@ public class View extends javax.swing.JFrame {
 
     public void anuncios(boolean gano) {
         this.setEnabled(false);
-        if (gano) {
-            JOptionPane.showMessageDialog(this, "Ganaste");
-        } else {
-            JOptionPane.showMessageDialog(this, "Perdiste");
-        }
+        JOptionPane.showMessageDialog(this, "Perdiste");
         this.dispose();
     }
 
@@ -59,8 +55,6 @@ public class View extends javax.swing.JFrame {
         TableroY = dimension.height; //Alto del panel
         TamX = TableroX / DimensionX; //Ancho del label
         TamY = TableroY / DimensionY; //Alto del label
-//        System.out.println("TamX: " + TamX);
-//        System.out.println("TamY: " + TamY);
     }
 
     public void crearTablero() {
@@ -194,15 +188,9 @@ public class View extends javax.swing.JFrame {
     public boolean isAliado(int xP, int yP) {
         ImageIcon hongo = new javax.swing.ImageIcon(getClass()
                 .getResource("/Imagenes/hongo.png"));
-        //Pregunta si un label tiene un aliado
-        //System.out.println(MatrizLabels[xP][yP].getIcon());
-        //if (!isEmpty((xP), (yP))) {
         if (MatrizLabels[xP][yP].getIcon().toString().equals(hongo.toString())) {
-            //System.out.println("isAliado: true");
             return true;
         }
-        //System.out.println("isAliado: false");
-        //}
         return false;
     }
 

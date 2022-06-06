@@ -60,7 +60,7 @@ public class enemigos extends serVivo{
         return posicionPP;
     }
 
-    public void setPosicionPP(String posicionPP) {
+    public void setPosicionPP() {
         this.posicionPP = observer.update();
     }
 
